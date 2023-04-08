@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 const initialState = {
     users: [],
@@ -9,14 +8,14 @@ const initialState = {
 
 const url = 'https://randomuser.me/api/?results=5';
 
-export const fetchUsers = createAsyncThunk('users/fetchUsers', async (users, {rejectWithValue}) => {
+export const fetchUsers = createAsyncThunk('users/fetchUsers', async (_, {rejectWithValue}) => {
     try {
-        const response = await axios(url, users);
-        console.log(response.data)
-        return response.data;
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
     }
     catch (error) {
-        rejectWithValue(error);
+        return rejectWithValue("Couldn't fetch data");
     }
 })
 
@@ -30,7 +29,6 @@ export const usersSlice = createSlice({
         })
         .addCase(fetchUsers.fulfilled, (state, action) => {
             const data = action.payload.results;
-            // console.log(data)
             const newUsers = data.map((user) => (({
                 id: user.cell,
                 first: user.name.first,
@@ -40,8 +38,8 @@ export const usersSlice = createSlice({
             state.users = newUsers;
         })
         .addCase(fetchUsers.rejected, (state, action) => {
-            state.error = action.payload;
             state.isLoading = false;
+            state.error = action.payload;
         })
     },
 });

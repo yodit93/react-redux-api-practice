@@ -5,18 +5,17 @@ import { useEffect } from "react";
 
 const Users = () => {
   const {users, isLoading, error} = useSelector((store) => store.users);
-  console.log(users);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUsers())
-  }, []);
+  }, [dispatch]);
   return (
     <>
       {isLoading && <h3>Loading...</h3>}
       {error && <h3>{error}</h3>}
       <ul className="users">
         {users.map(user => (
-          <UserList key={user.id} first={user.first} last={user.last} />
+          <UserList key={user.id} user={user} />
         ))}
       </ul>
     </>

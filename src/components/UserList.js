@@ -1,8 +1,7 @@
-const UserList = ({first, last}) => {
-  console.log('UserList')
+const UserList = ({user}) => {
   return ( 
     <li className="user-list">
-      <span className="name">{first} {last}</span>
+      <span className="name">{user.first} {user.last}</span>
     </li>
   );
 }
